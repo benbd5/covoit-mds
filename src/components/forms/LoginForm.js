@@ -1,14 +1,16 @@
-import React, { useState } from "react";
-import { Box, Button, FormControl, Input, WarningOutlineIcon } from "native-base";
+import React, { useState } from 'react'
+import { Box, Button, FormControl, Input, WarningOutlineIcon } from 'native-base'
+import Icon from 'react-native-vector-icons/Ionicons'
+import { loginStyle } from '../../theme/Style'
 
-function LoginForm() {
+function LoginForm ({ onLogin }) {
   const [showPassword, setShowPassword] = useState(false)
 
   return (
-    <Box>
-      <FormControl>
+    <Box w='80%'>
+      <FormControl style={loginStyle.input}>
         <FormControl.Label>Email</FormControl.Label>
-        <Input placeholder="contact@mds.org" />
+        <Input placeholder='contact@mds.org' />
         <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon />}>
           Une erreur s'est produite
         </FormControl.ErrorMessage>
@@ -25,7 +27,7 @@ function LoginForm() {
               h='full'
               onPress={() => setShowPassword(!showPassword)}
             >
-              {showPassword ? 'Hide' : 'Show'}
+              {showPassword ? <Icon name='eye' size={25} /> : <Icon name='eye-off' size={25} />}
             </Button>
           }
         />
@@ -33,6 +35,13 @@ function LoginForm() {
           Une erreur s'est produite
         </FormControl.ErrorMessage>
       </FormControl>
+      <Button
+        style={loginStyle.button}
+        size='md'
+        onPress={onLogin}
+      >
+        Se connecter
+      </Button>
     </Box>
   )
 }

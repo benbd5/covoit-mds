@@ -1,31 +1,38 @@
-import React from 'react';
-import { NativeBaseProvider } from 'native-base';
+import React from 'react'
+import { NativeBaseProvider } from 'native-base'
 import {
-  SafeAreaView,
   StatusBar,
-  useColorScheme,
-} from 'react-native';
+  useColorScheme
+} from 'react-native'
 
-import {
-  Colors
-} from 'react-native/Libraries/NewAppScreen';
-import AuthScreen from './screens/AuthScreen';
+import Navigator from './navigation/Navigator'
+import { DefaultTheme, NavigationContainer } from '@react-navigation/native'
+import { AuthProvider } from './contexts/AuthContext'
+import { getTheme } from './theme/Theme'
 
 const App = () => {
-  const isDarkMode = useColorScheme() === 'dark';
+  const isDarkMode = useColorScheme() === 'dark'
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
+  const theme = getTheme(isDarkMode)
+
+  const navigationTheme = {
+    ...DefaultTheme,
+    colors: {
+      ...DefaultTheme.colors,
+      background: isDarkMode ? '#0F172A' : '#fff'
+    }
+  }
 
   return (
-    <SafeAreaView style={backgroundStyle}>
+    <AuthProvider>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <NativeBaseProvider>
-        <AuthScreen />
-      </NativeBaseProvider>
-    </SafeAreaView>
-  );
-};
+      <NavigationContainer theme={navigationTheme}>
+        <NativeBaseProvider theme={theme}>
+          <Navigator />
+        </NativeBaseProvider>
+      </NavigationContainer>
+    </AuthProvider>
+  )
+}
 
-export default App;
+export default App
