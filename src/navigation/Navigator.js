@@ -8,6 +8,7 @@ import RegisterScreen from '../screens/RegisterScreen'
 import TabBar from './TabBar'
 import ProfileScreen from '../screens/ProfileScreen'
 import LinesScreen from '../screens/LinesScreen'
+import ModalScreen from '../screens/ModalScreen'
 
 const MainNavigator = createBottomTabNavigator()
 const AuthNavigator = createNativeStackNavigator()
@@ -34,9 +35,14 @@ function MainTabNavigator () {
         headerShown: false
       }}
     >
-      <MainNavigator.Screen name='Home' options={{ tabBarIcon: 'home' }} component={HomeScreen} />
-      <MainNavigator.Screen name='Lines' options={{ tabBarIcon: 'analytics' }} component={LinesScreen} />
-      <MainNavigator.Screen name='Profile' options={{ tabBarIcon: 'person' }} component={ProfileScreen} />
+      <MainNavigator.Group>
+        <MainNavigator.Screen name='Home' options={{ tabBarIcon: 'home' }} component={HomeScreen} />
+        <MainNavigator.Screen name='Lines' options={{ tabBarIcon: 'analytics' }} component={LinesScreen} />
+        <MainNavigator.Screen name='Profile' options={{ tabBarIcon: 'person' }} component={ProfileScreen} />
+      </MainNavigator.Group>
+      <MainNavigator.Group screenOptions={{ presentation: 'modal' }}>
+        <MainNavigator.Screen name='Modal' component={ModalScreen} />
+      </MainNavigator.Group>
     </MainNavigator.Navigator>
   )
 }
