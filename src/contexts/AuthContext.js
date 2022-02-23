@@ -1,5 +1,6 @@
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import React, { createContext, useEffect, useContext, useReducer } from 'react'
-// import { login } from '../services/api'
+import { loginWithCredentials } from '../services/Api'
 
 const AuthContext = createContext()
 
@@ -37,6 +38,36 @@ const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(AuthReducer, initalState)
 
   useEffect(() => {
+    // On check dans le storage si un token est présent pour authentifié l'utilisateur à l'ouverture de l'application
+    const loadStoredState = async () => {
+      const storedState = await rehydrateAuth()
+      if (storedState) {
+        dispatch({
+          type: actionTypes.LOGIN,
+          data: {
+            user: storedState.user,
+            token: storedState.token
+          }
+        })
+      }
+    }
+    loadStoredState()
+  }, [])
+
+  rehydrateAuth()
+    .then(data => {
+      if (data) {
+
+      } else {
+        const [state, dispatch] = useReducer(AuthReducer, data)
+      }
+    })
+
+  useEffect(() => {
+    const saveData = async () => {
+      await persistAuth(state)
+    }
+    saveData()
   }, [state])
 
   return <AuthContext.Provider value={{ state, dispatch }}>{children}</AuthContext.Provider>
@@ -50,13 +81,10 @@ const useAuth = () => {
 
 const loginUser = async (credentials, dispatch) => {
   try {
-    const data = {
-      token: 'TEST_TOKEN',
-      user: { firstName: 'Toto', lastName: 'Tata' }
-    }
+    const data = await loginWithCredentials(credentials)
     dispatch({
       type: actionTypes.LOGIN,
-      data: { user: data.user, token: data.token }
+      data: { user: data.user, token: data.jwt }
     })
   } catch (error) {
     dispatch({
@@ -66,9 +94,28 @@ const loginUser = async (credentials, dispatch) => {
   }
 }
 
+// Persiter la connexion
+const persistAuth = async (data) => {
+  try {
+    await AsyncStorage.setItem('AUTH', JSON.stringify(data))
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+const rehydrateAuth = async () => {
+  try {
+    const data = await AsyncStorage.getItem('AUTH')
+    return data ? JSON.parse(data) : null
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 export {
   useAuth,
   AuthProvider,
   actionTypes,
-  loginUser
+  loginUser,
+  persistAuth
 }

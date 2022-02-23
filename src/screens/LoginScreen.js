@@ -10,8 +10,8 @@ function LoginScreen ({ navigation }) {
 
   // Context pour récupérer les infos de connexion
   const { dispatch } = useAuth()
-  const handleLogin = () => {
-    loginUser({}, dispatch)
+  const handleLogin = async (credentials) => {
+    await loginUser(credentials, dispatch)
   }
 
   return (

@@ -5,12 +5,20 @@ import { loginStyle } from '../../theme/Style'
 
 function LoginForm ({ onLogin }) {
   const [showPassword, setShowPassword] = useState(false)
+  const [credentials, setCredentials] = useState({
+    identifier: '',
+    password: ''
+  })
 
   return (
     <Box w='80%'>
       <FormControl style={loginStyle.input}>
         <FormControl.Label>Email</FormControl.Label>
-        <Input placeholder='contact@mds.org' />
+        <Input
+          onChangeText={text => setCredentials({ ...credentials, identifier: text })}
+          value={credentials.identifier}
+          placeholder='contact@mds.org'
+        />
         <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon />}>
           Une erreur s'est produite
         </FormControl.ErrorMessage>
@@ -18,6 +26,8 @@ function LoginForm ({ onLogin }) {
       <FormControl>
         <FormControl.Label>Mot de passe</FormControl.Label>
         <Input
+          onChangeText={text => setCredentials({ ...credentials, password: text })}
+          value={credentials.password}
           type={showPassword ? 'text' : 'password'}
           InputRightElement={
             <Button
@@ -38,7 +48,7 @@ function LoginForm ({ onLogin }) {
       <Button
         style={loginStyle.button}
         size='md'
-        onPress={onLogin}
+        onPress={() => onLogin(credentials)}
       >
         Se connecter
       </Button>
