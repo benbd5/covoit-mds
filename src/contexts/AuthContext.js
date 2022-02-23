@@ -54,15 +54,6 @@ const AuthProvider = ({ children }) => {
     loadStoredState()
   }, [])
 
-  rehydrateAuth()
-    .then(data => {
-      if (data) {
-
-      } else {
-        const [state, dispatch] = useReducer(AuthReducer, data)
-      }
-    })
-
   useEffect(() => {
     const saveData = async () => {
       await persistAuth(state)
