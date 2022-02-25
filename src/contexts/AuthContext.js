@@ -1,16 +1,18 @@
+
+import React, { createContext, useContext, useReducer, useEffect } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import React, { createContext, useEffect, useContext, useReducer } from 'react'
-import { loginWithCredentials } from '../services/Api'
+import { loginWithCredentials, registerWithRegistrationCredentials } from '../services/Api'
 
 const AuthContext = createContext()
 
 const actionTypes = {
   LOGIN: 'LOGIN',
+  REGISTER: 'REGISTER',
   LOGOUT: 'LOGOUT',
   ERROR: 'ERROR'
 }
 
-const initalState = {
+const initialState = {
   token: null,
   user: null,
   error: null,
@@ -21,24 +23,27 @@ const AuthReducer = (state, action) => {
   switch (action.type) {
     case actionTypes.LOGIN:
       return {
-        ...initalState, token: action.data.token, user: action.data.user
+        ...initialState, token: action.data.token, user: action.data.user
+      }
+    case actionTypes.REGISTER:
+      return {
+        ...initialState, token: action.data.token, user: action.data.user
       }
     case actionTypes.ERROR:
       return {
-        ...initalState, error: action.data.error
+        ...initialState, error: action.data.error
       }
     case actionTypes.LOGOUT:
-      return initalState
+      return initialState
     default:
       throw new Error(`Unhandled action type : ${action.type}`)
   }
 }
 
 const AuthProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(AuthReducer, initalState)
+  const [state, dispatch] = useReducer(AuthReducer, initialState)
 
   useEffect(() => {
-    // On check dans le storage si un token est présent pour authentifié l'utilisateur à l'ouverture de l'application
     const loadStoredState = async () => {
       const storedState = await rehydrateAuth()
       if (storedState) {
@@ -85,7 +90,38 @@ const loginUser = async (credentials, dispatch) => {
   }
 }
 
-// Persiter la connexion
+/**
+ * registerUser
+ * @param { props } registrationCredentials Credentials for registration email or username + password requireds
+ * @returns { Function } register user with registerWithRegistrationCredentials function
+ */
+
+const registerUser = async (registrationCredentials, dispatch) => {
+  try {
+    const data = await registerWithRegistrationCredentials(registrationCredentials)
+    dispatch({
+      type: actionTypes.REGISTER,
+      data: { user: data.user, token: data.jwt }
+    })
+  } catch (error) {
+    dispatch({
+      type: actionTypes.ERROR,
+      data: { error: error.message }
+    })
+  }
+}
+
+const logoutUser = async (dispatch) => {
+  try {
+    dispatch({
+      type: actionTypes.LOGOUT
+    })
+    await AsyncStorage.clear()
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 const persistAuth = async (data) => {
   try {
     await AsyncStorage.setItem('AUTH', JSON.stringify(data))
@@ -108,5 +144,6 @@ export {
   AuthProvider,
   actionTypes,
   loginUser,
-  persistAuth
+  logoutUser,
+  registerUser
 }

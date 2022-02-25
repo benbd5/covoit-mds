@@ -6,7 +6,7 @@ function ModalScreen ({ navigation }) {
     <Container h='100%' w='100%'>
       <Center>
         <Text>MODAL SCREEN</Text>
-        <Button onPress={() => navigation.goBack()}>Fermer</Button>
+        <Button onPress={() => navigation.goBack()}>FERMER LE MODAL</Button>
       </Center>
     </Container>
   )

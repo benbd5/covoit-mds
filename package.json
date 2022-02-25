@@ -5,8 +5,8 @@
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
-    "reverse": "adb reverse tcp:8081 tcp:8081",
     "start": "react-native start",
+    "reverse": "adb reverse tcp:8081 tcp:8081",
     "test": "jest",
     "lint": "standard --fix"
   },
@@ -21,11 +21,14 @@
     "native-base": "^3.3.7",
     "react": "17.0.2",
     "react-native": "0.67.2",
+    "react-native-geolocation-service": "^5.3.0-beta.4",
     "react-native-gesture-handler": "^2.2.0",
     "react-native-maps": "^0.30.1",
+    "react-native-pager-view": "^5.4.11",
     "react-native-safe-area-context": "^3.4.0",
     "react-native-screens": "^3.12.0",
     "react-native-svg": "^12.1.1",
+    "react-native-tab-view": "^3.1.1",
     "react-native-vector-icons": "^9.1.0"
   },
   "devDependencies": {

@@ -2,15 +2,17 @@ import React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { useAuth } from '../contexts/AuthContext'
-import HomeScreen from '../screens/HomeScreen'
+
 import LoginScreen from '../screens/LoginScreen'
 import RegisterScreen from '../screens/RegisterScreen'
+import HomeScreen from '../screens/HomeScreen'
 import TabBar from './TabBar'
 import ProfileScreen from '../screens/ProfileScreen'
 import LinesScreen from '../screens/LinesScreen'
 import ModalScreen from '../screens/ModalScreen'
 
 const MainNavigator = createBottomTabNavigator()
+
 const AuthNavigator = createNativeStackNavigator()
 
 function AuthStack () {
@@ -49,10 +51,10 @@ function MainTabNavigator () {
 
 function Navigator () {
   const { state } = useAuth()
-  console.log(state)
+
   if (state.user && state.token) {
     return (
-      <MainTabNavigator />
+      <MainTabNavigator profilIsComplete={state.phone && state.school && state.class && state.status && state.biography} />
     )
   } else {
     return (
